@@ -22,6 +22,13 @@ app.get("/testing" , (req,res) =>{
     });
 });
 
+app.get("/" , (req,res) =>{
+    return res.status(200).json({
+        success:true,
+        message:"Donationbridge API is running",
+    });
+});
+
 app.use("/api/v1/auth" , authRoutes);
 app.use("/api/v1/donation" , donationRoutes);
 
