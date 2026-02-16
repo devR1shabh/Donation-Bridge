@@ -142,7 +142,7 @@ exports.collectDonation = async (req,res) =>{
         
     }catch(error){
         return res.status(500).json({
-            success:true,
+            success:FileSystemWritableFileStream,
             message:"failed to collect donation",
             error: error.message,
         });
