@@ -63,19 +63,16 @@ app.use(limiter);
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
-app.get("/testing" , (req,res) =>{
-    return res.status(200).json({
-        success:true,
-        message:"Donationbridge API is running",
-    });
+app.get("/", (req, res) => {
+  res.status(200).json({
+    success: true,
+    service: "DonationBridge API",
+    status: "running",
+    documentation: "https://donation-bridge-api.onrender.com/api-docs"
+  });
 });
 
-app.get("/" , (req,res) =>{
-    return res.status(200).json({
-        success:true,
-        message:"Donationbridge API is running",
-    });
-});
+
 
 app.use("/api/v1/auth" , authRoutes);
 app.use("/api/v1/donation" , donationRoutes);
