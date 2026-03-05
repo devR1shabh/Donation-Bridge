@@ -4,7 +4,16 @@ require("dotenv").config();
 exports.auth = (req,res,next) =>{
     try{
         
-        const token = req.header("Authorization")?.replace("Bearer ","");
+        const authHeader = req.headers.authorization;
+        
+        if (!authHeader) {
+            return res.status(401).json({
+                success:false,
+                message:"token missing or invalid"
+            });
+        }
+        
+        const token = authHeader.split(" ")[1];
         
         if(!token || token == undefined){
             return res.status(401).json({
@@ -18,8 +27,6 @@ exports.auth = (req,res,next) =>{
         _id:payload._id,
         role:payload.role,
     };
-
-
 
     next();
 

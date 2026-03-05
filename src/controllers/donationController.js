@@ -12,6 +12,12 @@ exports.createDonation = async (req,res) =>{
             });
         }
 
+        if(new Date(pickupBy) <= new Date()){
+            return res.status(400).json({
+                success:false,
+                message:"Pick up date must be in the future",
+            });
+        }
         console.log("REQ USER- ",req.user)
 
         const donation = await Donation.create({
@@ -40,13 +46,23 @@ exports.createDonation = async (req,res) =>{
 
 exports.getAvailableDonations = async (req,res) =>{
     try{
+
+        const page = parseInt(req.query.page) || 1;
+        const limit  = parseInt(req.query.limit) || 10;
+
         const donations = await Donation.find({
             status:"available",
             pickupBy:{$gt : new Date()},
-        });
+        })
+        .populate("postedBy" , "name email")
+        .skip((page-1) * limit)
+        .limit(limit)
+        .sort({createdAt :-1});
 
         return res.status(200).json({
             success:true,
+            page,
+            limit,
             donations,
         });
 
@@ -71,6 +87,13 @@ exports.claimDonations = async (req,res) => {
             return res.status(404).json({
                 success:false,
                 message:"Donation Not found",
+            });
+        }
+
+        if(donation.postedBy.toString() === req.user._id.toString()){
+            return res.status(400).json({
+                success:false,
+                message:"You Cannot claim your own donation",
             });
         }
 
@@ -142,9 +165,56 @@ exports.collectDonation = async (req,res) =>{
         
     }catch(error){
         return res.status(500).json({
-            success:FileSystemWritableFileStream,
+            success:false,
             message:"failed to collect donation",
             error: error.message,
         });
+    }
+}
+
+
+exports.getMyDonations = async (req,res) =>{
+    try{
+        const donations = await Donation.find({
+            postedBy : req.user._id,
+        })
+        .sort({createdAt:-1});
+
+        return res.status(200).json({
+            success:true,
+            message:"donations fetched",
+            donations,
+        })
+    }catch(error){
+        console.error("error- ",error);
+        return res.status(500).json({
+            success:false,
+            message:"Could not fetch donations",
+            error:error.message,
+        });
+    }
+}
+
+
+exports.getClaimedDonations = async(req,res) =>{
+    try{
+        const donations = await Donation.find({
+            claimedBy:req.user._id,
+        })
+        .populate("postedBy" , "name email")
+        .sort({createdAt:-1});
+
+        return res.status(200).json({
+            success:true,
+            message:"Claimed Donations fetched",
+            donations,
+        })
+    }catch(error){
+        console.error(error);
+        return res.status(500).json({
+            success:false,
+            message:"Failed to see claimed donations",
+            error:error.message,
+        })
     }
 }
