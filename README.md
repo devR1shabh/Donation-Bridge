@@ -1,120 +1,243 @@
+# 🍽️ Donation Bridge — Backend API
+
+![Node.js](https://img.shields.io/badge/Node.js-Backend-green)
+![Express](https://img.shields.io/badge/Express.js-Framework-lightgrey)
+![MongoDB](https://img.shields.io/badge/MongoDB-Database-green)
+![JWT](https://img.shields.io/badge/Auth-JWT-blue)
+![API](https://img.shields.io/badge/API-REST-orange)
 
 
-# 🍽️ Donation Bridge — Backend
+A **role-based food donation management backend** where restaurants donate surplus food and NGOs claim and collect it.  
+The system enforces a structured **donation lifecycle and responsibility model** to ensure food distribution happens transparently and efficiently.
 
-A role-based food donation management backend where restaurants donate surplus food and NGOs claim and collect it, ensuring accountability through a well-defined donation lifecycle.
+This backend focuses on **secure authentication, role-based authorization, and workflow-driven API design**, rather than simple CRUD operations.
 
 ---
 
 ## 🚀 Overview
 
-**Donation Bridge** is a backend system designed to solve a real-world coordination problem:  
-matching food donors (restaurants) with food distributors (NGOs) in a controlled and reliable way.
+Donation Bridge solves a real-world coordination problem:
 
-The system focuses on **ownership, responsibility, and state transitions**, rather than just basic CRUD operations.
+Connecting **food donors (restaurants)** with **food distributors (NGOs)**.
 
----
+Restaurants often have surplus food, while NGOs distribute it to people in need. This backend provides the infrastructure to ensure:
 
-## 🎯 Key Features
-
-### 🔐 Authentication & Authorization
-- Secure user authentication using **JWT**
-- Role-based access control:
-  - Restaurant
-  - NGO
-
-### 🔄 Donation Lifecycle Management
-Each donation follows a strict and validated lifecycle:
-
-available → claimed → collected
-
-
-- **available**: Donation is open and visible to NGOs  
-- **claimed**: An NGO has taken responsibility for pickup  
-- **collected**: Restaurant confirms physical handover and closes the donation  
-
-### 🧠 Business Logic Enforcement
-- Prevents multiple NGOs from claiming the same donation
-- Ensures only the restaurant that created a donation can mark it as collected
-- Filters expired donations using pickup deadlines
-- Enforces valid state transitions at every step
+- Only authorized users perform actions
+- Food donations follow a a structured lifecycle
+- NGOs cannot claim already claimed donations
+- Restaurants confirm final collection
 
 ---
 
-## 🏗️ Tech Stack
+## ✨ Features
+
+- JWT Authentication
+- Role-Based Access Control (Restaurant / NGO)
+- Secure password hashing using **bcrypt**
+- Donation lifecycle management
+- Swagger API documentation
+- Rate limiting for API protection
+- RESTful API architecture
+- MongoDB database integration
+- Deployed backend API
+
+---
+
+## 🧠 System Architecture
+
+```
+Client (Swagger UI / Future Frontend)
+            │
+            ▼
+       Express Server
+            │
+            ▼
+ Authentication Middleware (JWT)
+            │
+            ▼
+  Role Authorization Middleware
+            │
+            ▼
+       Controllers
+      (Business Logic)
+            │
+            ▼
+       MongoDB Database
+       (Mongoose Models)
+```
+
+### Architecture Layers
+
+| Layer | Responsibility |
+|------|------|
+| Routes | Define API endpoints |
+| Middleware | Authentication & role validation |
+| Controllers | Business logic implementation |
+| Models | MongoDB data structure |
+| Database | Persistent storage |
+
+---
+
+## 🔄 Donation Lifecycle
+
+```
+Restaurant creates donation
+        │
+        ▼
+Status: AVAILABLE
+        │
+        ▼
+NGO views available donations
+        │
+        ▼
+NGO claims donation
+        │
+        ▼
+Status: CLAIMED
+        │
+        ▼
+Restaurant confirms pickup
+        │
+        ▼
+Status: COLLECTED
+```
+
+This ensures:
+
+- Only **one NGO** can claim a donation
+- Restaurants **verify final pickup**
+- All actions follow a **controlled workflow**
+
+---
+
+## ⚙️ Tech Stack
+
 - Node.js
 - Express.js
-- MongoDB (Mongoose)
-- JWT (JSON Web Tokens)
+- MongoDB
+- Mongoose
+- JWT Authentication
+- bcrypt Password Hashing
+- Swagger UI
+- express-rate-limit
+- Render Deployment
 
 ---
 
-## 📦 Core API Endpoints
+## 📦 API Endpoints
 
-### 🔑 Authentication
+### 🔑 Authentication Routes
 
 | Method | Endpoint | Description |
-|------|---------|------------|
-| POST | `/auth/signup` | User registration |
-| POST | `/auth/login` | User login & JWT generation |
+|------|------|------|
+| POST | /api/v1/auth/signup | Register a new user |
+| POST | /api/v1/auth/login | Login and receive JWT token |
 
 ---
 
-### 🍽️ Donations (Restaurant)
+### 🍽️ Restaurant Routes
 
 | Method | Endpoint | Description |
-|------|---------|------------|
-| POST | `/donations/create` | Create a new donation |
-| PATCH | `/donations/:id/collect` | Mark donation as collected |
+|------|------|------|
+| POST | /api/v1/donation/create | Create a new donation |
+| PATCH | /api/v1/donation/{id}/collect | Mark donation as collected |
 
 ---
 
-### 🤝 Donations (NGO)
+### 🤝 NGO Routes
 
 | Method | Endpoint | Description |
-|------|---------|------------|
-| GET | `/donations/available` | View available donations |
-| POST | `/donations/:id/claim` | Claim a donation |
+|------|------|------|
+| GET | /api/v1/donation/available | View available donations |
+| POST | /api/v1/donation/{id}/claim | Claim a donation |
 
 ---
 
-## 🔁 Complete Application Flow
+## 📄 Example API Request
 
-1. User signs up and logs in (JWT issued)
-2. Restaurant creates a donation
-3. NGO views available donations
-4. NGO claims a donation (takes responsibility)
-5. Restaurant confirms collection and closes the lifecycle
+### Create Donation
 
-This design mirrors real-world ownership and accountability.
+POST /api/v1/donation/create
+
+#### Request Body
+
+```json
+{
+  "foodName": "Cooked Rice",
+  "quantity": "50 plates",
+  "location": "Sector 18, Noida",
+  "pickupBy": "2026-04-05T20:31:58.857Z"
+}
+```
+
+#### Response
+
+```json
+{
+  "success": true,
+  "message": "Donation Created successfully"
+}
+```
 
 ---
 
-## 🧠 Design Decisions (Why This Matters)
+## 📚 API Documentation
 
-- **Claim ≠ Collect**
-  - Claim assigns responsibility
-  - Collect confirms physical handover
+Interactive API documentation is available via **Swagger UI**.
 
-- **Restaurant closes the lifecycle**
-  - The food owner is the source of truth
+### Local Development
 
-- **PATCH used for collection**
-  - Partial update of resource state
+http://localhost:5000/api-docs
 
-- **State-based logic**
-  - Prevents invalid or duplicate actions
+Swagger allows developers to:
+
+- Test endpoints
+- Authorize JWT tokens
+- Send request bodies
+- View API responses
+
+---
+
+## 🌐 Live Deployment
+
+The backend API is deployed on **Render**.
+
+### Base URL
+
+https://your-api-name.onrender.com
+
+### Swagger Documentation
+
+https://your-api-name.onrender.com/api-docs
+
+---
+
+## 🧪 Testing
+
+All endpoints were tested using:
+
+- Swagger UI
+
+### Tested Flows
+
+- User signup
+- User login
+- Donation creation
+- Viewing available donations
+- Claiming donations
+- Marking donations as collected
+- Full donation lifecycle
 
 ---
 
 ## 📁 Project Structure
 
-```bash
+```
 donationBridge/
 │
 ├── index.js
-├── .env
 ├── package.json
+├── .env
 │
 └── src/
     ├── app.js
@@ -122,68 +245,101 @@ donationBridge/
     ├── config/
     │   └── database.js
     │
-    ├── models/
-    │   ├── User.js
-    │   └── Donation.js
-    │
     ├── controllers/
     │   ├── authController.js
     │   └── donationController.js
+    │
+    ├── models/
+    │   ├── User.js
+    │   └── Donation.js
     │
     ├── routes/
     │   ├── authRoutes.js
     │   └── donationRoutes.js
     │
-    ├── middleware/
-    │   ├── authMiddleware.js
-    │   ├── roleMiddleware.js
-    │   └── errorMiddleware.js
-    
-        
+    └── middleware/
+        ├── authMiddleware.js
+        ├── roleMiddleware.js
+        └── errorMiddleware.js
 ```
 
-
-
 ---
 
-## 🔒 Security Practices
-- Password hashing
-- JWT verification middleware
+## 🛡️ Security Features
+
+- Password hashing using **bcrypt**
+- JWT authentication
 - Role-based route protection
-- Environment variables hidden via `.gitignore`
+- Rate limiting
+- Environment variables for sensitive credentials
 
 ---
 
-## 🧪 Testing
+## ⚙️ Local Setup
 
-All endpoints were tested end-to-end using **Postman**, covering:
-- Authentication
-- Role switching
-- Valid and invalid state transitions
-- Full donation lifecycle
+### Clone the repository
+
+```
+git clone https://github.com/your-username/donation-bridge.git
+```
+
+### Install dependencies
+
+```
+npm install
+```
+
+### Create `.env` file
+
+```
+PORT=5000
+DATABASE_URL=your_mongodb_connection
+JWT_SECRET=your_secret_key
+```
+
+### Run the server
+
+```
+npm run dev
+```
 
 ---
 
-## 🌱 Future Improvements
-- React frontend (planned)
-- Donation history dashboards
-- Pagination & filters
-- Deployment (Render / Railway / Vercel)
+## 📌 Project Status
 
----
-
-## 📌 Status
-✅ Backend complete  
-🟡 Frontend (React) coming next  
+**Backend:** Completed  
+**Frontend:** Planned (React)
 
 ---
 
 ## 👤 Author
 
-**Rishabh Vyas**  
-Backend Developer | Node.js | Express | MongoDB  
+**Rishabh Vyas**
+
+Backend Developer  
+Node.js • Express • MongoDB
 
 ---
 
-## 💬 Final Note
-This project focuses on **correct system design**, **clear responsibilities**, and **real-world workflow modeling** — not just basic CRUD APIs.
+## 💡 Final Note
+
+This project focuses on **correct backend architecture and real-world workflow modeling**, demonstrating:
+
+- Authentication
+- Authorization
+- REST API design
+- Secure backend development
+- Business logic enforcement
+
+The goal was to design a **structured backend system rather than a simple CRUD application**.
+
+
+
+
+## 🚧 Future Improvements
+
+- Add unit and integration testing using **Jest + Supertest**
+- Implement **Redis caching** for frequently accessed data
+- Add **background job queue** for pickup reminders
+- Build a **React frontend dashboard**
+- Dockerize the application for easier deployment
