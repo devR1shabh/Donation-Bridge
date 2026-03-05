@@ -23,7 +23,7 @@ Connecting **food donors (restaurants)** with **food distributors (NGOs)**.
 Restaurants often have surplus food, while NGOs distribute it to people in need. This backend provides the infrastructure to ensure:
 
 - Only authorized users perform actions
-- Food donations follow a a structured lifecycle
+- Food donations follow a structured lifecycle
 - NGOs cannot claim already claimed donations
 - Restaurants confirm final collection
 
@@ -204,11 +204,11 @@ The backend API is deployed on **Render**.
 
 ### Base URL
 
-https://your-api-name.onrender.com
+https://donation-bridge-api.onrender.com/
 
 ### Swagger Documentation
 
-https://your-api-name.onrender.com/api-docs
+https://donation-bridge-api.onrender.com/api-docs
 
 ---
 
@@ -233,7 +233,7 @@ All endpoints were tested using:
 ## 📁 Project Structure
 
 ```
-donationBridge/
+Donation-Bridge/
 │
 ├── index.js
 ├── package.json
@@ -280,7 +280,7 @@ donationBridge/
 ### Clone the repository
 
 ```
-git clone https://github.com/your-username/donation-bridge.git
+git clone https://github.com/devR1shabh/Donation-Bridge
 ```
 
 ### Install dependencies
@@ -316,8 +316,7 @@ npm run dev
 
 **Rishabh Vyas**
 
-Backend Developer  
-Node.js • Express • MongoDB
+Software Developer 
 
 ---
 
