@@ -25,7 +25,9 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: "http://localhost:5000",
+        url: process.env.NODE_ENV === "production"
+      ? "https://donation-bridge-api.onrender.com"
+      : "http://localhost:5000"
       },
     ],
     components: {
