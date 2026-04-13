@@ -1,5 +1,13 @@
 # 🍽️ Donation Bridge — Backend API
 
+## 🌐 Live Demo
+
+Base URL:  
+https://donation-bridge-api.onrender.com/
+
+Swagger Docs:  
+https://donation-bridge-api.onrender.com/api-docs
+
 ![Node.js](https://img.shields.io/badge/Node.js-Backend-green)
 ![Express](https://img.shields.io/badge/Express.js-Framework-lightgrey)
 ![MongoDB](https://img.shields.io/badge/MongoDB-Database-green)
@@ -13,21 +21,20 @@ The system enforces a structured **donation lifecycle and responsibility model**
 This backend focuses on **secure authentication, role-based authorization, and workflow-driven API design**, rather than simple CRUD operations.
 
 ---
+# 🚀 Overview
 
-## 🚀 Overview
+Donation Bridge is a backend system designed to solve the real-world problem of *food wastage and distribution inefficiency*.
 
-Donation Bridge solves a real-world coordination problem:
+Restaurants often have surplus food that goes unused, while NGOs require a structured way to collect and distribute food to people in need. This system connects both parties through a *controlled and secure backend API*.
 
-Connecting **food donors (restaurants)** with **food distributors (NGOs)**.
+The platform ensures:
 
-Restaurants often have surplus food, while NGOs distribute it to people in need. This backend provides the infrastructure to ensure:
+- Only authorized users can perform actions  
+- Donations follow a structured lifecycle  
+- Multiple NGOs cannot claim the same donation  
+- Restaurants verify the final collection  
 
-- Only authorized users perform actions
-- Food donations follow a structured lifecycle
-- NGOs cannot claim already claimed donations
-- Restaurants confirm final collection
-
----
+Instead of simple CRUD operations, the system is built around *workflow-based state transitions*, making it closer to real-world backend systems.
 
 ## ✨ Features
 
@@ -40,6 +47,15 @@ Restaurants often have surplus food, while NGOs distribute it to people in need.
 - RESTful API architecture
 - MongoDB database integration
 - Deployed backend API
+
+---
+
+## ⚡ API Features
+
+- Pagination support using page and limit
+- Sorting support (latest donations first)
+- Filtering donations based on status and pickup time
+- Optimized database queries for efficient data retrieval
 
 ---
 
@@ -176,7 +192,7 @@ POST /api/v1/donation/create
 {
   "success": true,
   "message": "Donation Created successfully"
-}
+} 
 ```
 
 ---
@@ -198,19 +214,6 @@ Swagger allows developers to:
 
 ---
 
-## 🌐 Live Deployment
-
-The backend API is deployed on **Render**.
-
-### Base URL
-
-https://donation-bridge-api.onrender.com/
-
-### Swagger Documentation
-
-https://donation-bridge-api.onrender.com/api-docs
-
----
 
 ## 🧪 Testing
 
@@ -270,7 +273,7 @@ Donation-Bridge/
 - Password hashing using **bcrypt**
 - JWT authentication
 - Role-based route protection
-- Rate limiting
+- Rate limiting 
 - Environment variables for sensitive credentials
 
 ---
