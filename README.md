@@ -1,14 +1,18 @@
-# Donation Bridge - Full-Stack MERN Food Donation Platform
+# DonationBridge - Full-Stack MERN Food Donation Platform
 
-Donation Bridge is a role-based food donation platform that connects restaurants with NGOs. Restaurants can post surplus food donations, NGOs can claim available donations, and restaurants can confirm final pickup.
-
-The project is built around a controlled donation lifecycle:
+DonationBridge is a production-style MERN platform that connects restaurants with NGOs to reduce food waste. Restaurants post surplus food donations, NGOs claim available listings, and restaurants confirm final pickup through a controlled donation lifecycle.
 
 ```txt
 available -> claimed -> collected
 ```
 
-This ensures that donations move through a predictable workflow, prevents multiple NGOs from claiming the same donation, and keeps collection responsibility clear.
+The latest frontend upgrade turns the project into a polished SaaS-style product experience with a professional landing page, responsive navigation, redesigned authentication, role-aware dashboards, search/filter donation boards, status badges, loading states, empty states, toast notifications, and subtle motion.
+
+## Screenshots
+
+![DonationBridge landing page](docs/screenshots/landing.png)
+
+![DonationBridge login page](docs/screenshots/login.png)
 
 ## Live Links
 
@@ -22,43 +26,39 @@ This ensures that donations move through a predictable workflow, prevents multip
 
 ### Frontend
 
-- React.js
-- Vite
+- React + Vite
 - React Router
 - Axios
-- CSS
+- Context API
+- Tailwind CSS
+- Framer Motion
+- Lucide React icons
+- Responsive custom CSS design system
 - Vercel deployment
 
 ### Backend
 
-- Node.js
-- Express.js
-- MongoDB
-- Mongoose
+- Node.js + Express.js
+- MongoDB + Mongoose
 - JWT authentication
 - bcrypt password hashing
+- Role-based middleware
 - Swagger UI
 - express-rate-limit
 - Render deployment
 
-## Key Features
+## Product Features
 
-- User signup and login
-- JWT-based authentication
-- Role-based authorization for restaurants and NGOs
-- Protected frontend routes
-- Restaurant dashboard
-- NGO dashboard
-- Create food donations
-- View restaurant's own donations
-- View available donations
-- Claim donations
-- View claimed donations
-- Mark claimed donations as collected
-- API pagination, filtering, and sorting
-- Swagger API documentation
-- API rate limiting
-- Production deployment with separate frontend and backend services
+- Professional public landing page with hero, feature, workflow, role explanation, testimonial-style proof, CTA, and footer sections
+- Mobile-responsive navbar with public and authenticated navigation states
+- Split-screen login and signup pages with validation, password visibility toggles, loading states, and branded visuals
+- JWT-based authentication preserved through the existing Context API flow
+- Restaurant dashboard with live donation metrics, recent activity, and quick actions
+- NGO dashboard with available donation metrics, claimed pickup timeline, and quick actions
+- Donation cards with food imagery, quantity, pickup location, expiry time, restaurant information, status badges, and role-specific CTA buttons
+- Search, status filters, and sorting for donation management screens
+- Skeleton loading states, polished empty states, inline errors, and toast notifications
+- Fully responsive layouts for mobile, tablet, and desktop
 
 ## User Roles
 
@@ -77,7 +77,8 @@ NGOs can:
 
 - View available donations
 - Claim a donation
-- View their claimed donations
+- View claimed donations
+- Track pickup status
 
 ## Donation Lifecycle
 
@@ -107,33 +108,6 @@ Lifecycle rules:
 - A donation can only be claimed if it is available.
 - A restaurant can only mark its own claimed donation as collected.
 - Collected donations complete the workflow.
-
-## System Architecture
-
-```txt
-React Frontend
-      |
-      v
-Axios API Layer
-      |
-      v
-Express REST API
-      |
-      v
-JWT Authentication Middleware
-      |
-      v
-Role Authorization Middleware
-      |
-      v
-Controllers
-      |
-      v
-Mongoose Models
-      |
-      v
-MongoDB Database
-```
 
 ## API Endpoints
 
@@ -168,8 +142,6 @@ https://donation-bridge-api.onrender.com/api/v1
 
 ## Example API Request
 
-### Create Donation
-
 ```http
 POST /api/v1/donation/create
 Authorization: Bearer <jwt_token>
@@ -185,48 +157,22 @@ Content-Type: application/json
 }
 ```
 
-### Example Response
-
-```json
-{
-  "success": true,
-  "message": "Donation Created successfully",
-  "donation": {
-    "_id": "donation_id",
-    "foodName": "Cooked Rice",
-    "quantity": "50 plates",
-    "location": "Sector 18, Noida",
-    "status": "available"
-  }
-}
-```
-
 ## Project Structure
 
 ```txt
-Donation-Bridge/
-|
+DonationBridge/
 |-- index.js
 |-- package.json
 |-- README.md
+|-- docs/
+|   |-- screenshots/
 |-- src/
 |   |-- app.js
 |   |-- config/
-|   |   |-- database.js
 |   |-- controllers/
-|   |   |-- authController.js
-|   |   |-- donationController.js
 |   |-- middleware/
-|   |   |-- authMiddleware.js
-|   |   |-- errorMiddleware.js
-|   |   |-- roleMiddleware.js
 |   |-- models/
-|   |   |-- Donation.js
-|   |   |-- User.js
 |   |-- routes/
-|       |-- authRoutes.js
-|       |-- donationRoutes.js
-|
 |-- frontend/
     |-- index.html
     |-- package.json
@@ -237,24 +183,10 @@ Donation-Bridge/
         |-- main.jsx
         |-- styles.css
         |-- api/
-        |   |-- axios.js
         |-- components/
-        |   |-- DonationCard.jsx
-        |   |-- EmptyState.jsx
-        |   |-- Loading.jsx
-        |   |-- Navbar.jsx
-        |   |-- ProtectedRoute.jsx
-        |   |-- StatusMessage.jsx
         |-- context/
-        |   |-- AuthContext.jsx
         |-- pages/
-            |-- AvailableDonations.jsx
-            |-- ClaimedDonations.jsx
-            |-- CreateDonation.jsx
-            |-- Dashboard.jsx
-            |-- Login.jsx
-            |-- MyDonations.jsx
-            |-- Signup.jsx
+        |-- utils/
 ```
 
 ## Local Setup
@@ -284,40 +216,31 @@ npm install
 npm run dev
 ```
 
-Backend will run on:
+Backend runs on:
 
 ```txt
 http://localhost:5000
 ```
 
-Swagger docs will be available at:
-
-```txt
-http://localhost:5000/api-docs
-```
-
 ### 4. Configure frontend environment variables
 
-Go to the frontend folder:
-
-```bash
-cd frontend
-```
-
-Create a `.env` file:
+Create `frontend/.env`:
 
 ```env
 VITE_API_BASE_URL=http://localhost:5000/api/v1
 ```
 
+If this variable is omitted, the frontend falls back to the deployed Render API.
+
 ### 5. Install and run frontend
 
 ```bash
+cd frontend
 npm install
 npm run dev
 ```
 
-Frontend will run on:
+Frontend runs on:
 
 ```txt
 http://localhost:5173
@@ -342,22 +265,14 @@ VITE_API_BASE_URL=https://donation-bridge-api.onrender.com/api/v1
 
 ## Deployment
 
-### Backend
-
-The backend is deployed on Render.
-
-Render settings:
+### Backend on Render
 
 ```txt
 Build Command: npm install
 Start Command: node index.js
 ```
 
-### Frontend
-
-The frontend is deployed on Vercel.
-
-Vercel settings:
+### Frontend on Vercel
 
 ```txt
 Framework Preset: Vite
@@ -367,37 +282,43 @@ Output Directory: dist
 Install Command: npm install
 ```
 
+## Quality Checks
+
+Run frontend checks from `frontend/`:
+
+```bash
+npm run lint
+npm run build
+```
+
 ## Security Features
 
 - Passwords hashed with bcrypt
 - JWT authentication
 - Protected API routes
 - Role-based route access
-- Rate limiting using express-rate-limit
 - Environment variables for secrets
 - CORS configured for production frontend
+- API rate limiting
 
 ## Tested Flows
 
-- Restaurant signup
-- Restaurant login
+- Restaurant signup and login
 - Restaurant donation creation
 - Restaurant view own donations
-- NGO signup
-- NGO login
+- NGO signup and login
 - NGO view available donations
 - NGO claim donation
 - NGO view claimed donations
 - Restaurant mark donation as collected
-- Full donation lifecycle from available to claimed to collected
+- Full lifecycle from available to claimed to collected
 
 ## Future Improvements
 
 - Add unit and integration tests using Jest and Supertest
-- Add image upload support for donations
+- Add donation image upload support
 - Add pickup reminder notifications
-- Add Redis caching for frequently accessed donations
-- Add admin dashboard
+- Add admin analytics endpoints and dashboard
 - Dockerize the full-stack application
 
 ## Author

@@ -1,50 +1,80 @@
-function formatDate(value) {
-  if (!value) {
-    return "Not provided";
-  }
+import { motion } from "framer-motion";
+import { Building2, CalendarClock, MapPin, Package, Utensils } from "lucide-react";
+import { formatDate, getDonationImage } from "../utils/donations";
 
-  return new Intl.DateTimeFormat(undefined, {
-    dateStyle: "medium",
-    timeStyle: "short",
-  }).format(new Date(value));
-}
+const MotionArticle = motion.article;
 
 export default function DonationCard({ donation, actionLabel, onAction, busy }) {
   return (
-    <article className="donation-card">
-      <div className="donation-card-header">
-        <div>
-          <h3>{donation.foodName}</h3>
-          <p className="muted">{donation.quantity}</p>
-        </div>
+    <MotionArticle
+      className="donation-card"
+      initial={{ opacity: 0, y: 14 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={{ y: -3 }}
+    >
+      <div className="donation-image">
+        <img src={getDonationImage(donation)} alt="" />
         <span className={`badge ${donation.status}`}>{donation.status}</span>
       </div>
 
-      <dl className="donation-details">
-        <div>
-          <dt>Pickup by</dt>
-          <dd>{formatDate(donation.pickupBy)}</dd>
-        </div>
-        <div>
-          <dt>Location</dt>
-          <dd>{donation.location}</dd>
-        </div>
-        {donation.postedBy && (
+      <div className="donation-card-body">
+        <div className="donation-card-header">
           <div>
-            <dt>Restaurant</dt>
-            <dd>
-              {donation.postedBy.name}
-              {donation.postedBy.email ? ` (${donation.postedBy.email})` : ""}
-            </dd>
+            <span className="mini-label">
+              <Utensils size={14} />
+              Food donation
+            </span>
+            <h3>{donation.foodName}</h3>
           </div>
-        )}
-      </dl>
+        </div>
 
-      {actionLabel && (
-        <button type="button" onClick={onAction} disabled={busy}>
-          {busy ? "Please wait..." : actionLabel}
-        </button>
-      )}
-    </article>
+        <dl className="donation-details">
+          <div>
+            <Package size={17} />
+            <span>
+              <dt>Quantity</dt>
+              <dd>{donation.quantity}</dd>
+            </span>
+          </div>
+          <div>
+            <CalendarClock size={17} />
+            <span>
+              <dt>Pickup by</dt>
+              <dd>{formatDate(donation.pickupBy)}</dd>
+            </span>
+          </div>
+          <div>
+            <MapPin size={17} />
+            <span>
+              <dt>Location</dt>
+              <dd>{donation.location}</dd>
+            </span>
+          </div>
+          {donation.postedBy && (
+            <div>
+              <Building2 size={17} />
+              <span>
+                <dt>Restaurant</dt>
+                <dd>
+                  {donation.postedBy.name}
+                  {donation.postedBy.email ? ` (${donation.postedBy.email})` : ""}
+                </dd>
+              </span>
+            </div>
+          )}
+        </dl>
+
+        {actionLabel && (
+          <button
+            className="button primary full"
+            type="button"
+            onClick={onAction}
+            disabled={busy}
+          >
+            {busy ? "Please wait..." : actionLabel}
+          </button>
+        )}
+      </div>
+    </MotionArticle>
   );
 }

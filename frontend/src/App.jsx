@@ -5,8 +5,10 @@ import AvailableDonations from "./pages/AvailableDonations";
 import ClaimedDonations from "./pages/ClaimedDonations";
 import CreateDonation from "./pages/CreateDonation";
 import Dashboard from "./pages/Dashboard";
+import Home from "./pages/Home";
 import Login from "./pages/Login";
 import MyDonations from "./pages/MyDonations";
+import NotFound from "./pages/NotFound";
 import Signup from "./pages/Signup";
 
 export default function App() {
@@ -15,7 +17,7 @@ export default function App() {
       <Navbar />
       <main className="page-shell">
         <Routes>
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route
@@ -58,7 +60,7 @@ export default function App() {
               </ProtectedRoute>
             }
           />
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
     </>
